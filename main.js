@@ -189,3 +189,40 @@ class BoardView {
         }
     }
 }
+
+var board1 = new Board(800, 400);
+var bar_1 = new Bar(0, 100, 20, 100, board1);
+var bar_2 = new Bar(780, 100, 20, 100, board1);
+var ball = new Ball(350, 100, 10, board1);
+var canvas1 = document.getElementById('canvas');
+var board_view = new BoardView(canvas1, board1);
+
+document.addEventListener("keydown", function (ev) {
+    if (ev.which == 87) {
+        ev.preventDefault();
+        bar_1.up();
+    } else if (ev.which == 83) {
+        ev.preventDefault();
+        bar_1.down();
+    } else if (ev.which === 38) {
+        ev.preventDefault();
+        bar_2.up();
+    } else if (ev.which === 40) {
+        ev.preventDefault();
+        bar_2.down();
+    } else if (ev.which === 32) {
+        ev.preventDefault();
+        board1.playing = !board1.playing;
+    }
+});
+
+board_view.draw();
+
+window.requestAnimationFrame(controller);
+
+function controller() {
+    board_view.play();
+    if (board_view.board.game_over) location.reload(); 
+    requestAnimationFrame(controller);
+
+}
