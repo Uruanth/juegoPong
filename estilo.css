@@ -1,0 +1,21 @@
+h1{
+    display: block;
+    text-align: center;
+}
+h2{
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+}
+h3{
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+}
+canvas {
+    position: relative;
+    left: 14%;
+    border: solid;
+    background-color:rgba(226, 132, 190, 0.368);
+
+}
