@@ -1,3 +1,6 @@
+let conP1 = 0;
+let conP2 = 0;
+
 class Board {
     constructor(width, height) {
         this.width = width;
