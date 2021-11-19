@@ -87,3 +87,105 @@ class Bar {
     down = () => this.y += this.speed;
     up = () => this.y -= this.speed;
 };
+
+class BoardView {
+    constructor(canvas, board) {
+        this.canvas = canvas;
+        this.board = board;
+        this.ctx = canvas.getContext("2d");
+        this.canvas.height = board.height;
+        this.canvas.width = board.width;
+    }
+
+    clean = () => this.ctx.clearRect(0, 0, this.board.width,
+        this.board.height);
+
+    draw = () => {
+
+        for (let i in this.board.elements) {
+            let el = this.board.elements[i];
+            this.drawf(this.ctx, el);
+        }
+    };
+
+    check_collisions = () => {
+
+        for (let i of this.board.bars) {
+            if (this.hit(i, this.board.ball)) {
+                this.board.ball.collision(i);
+            }
+        }
+
+        //Bordes verticales
+        if (this.board.ball.x < 0 || this.board.ball.x > 800) {
+            if (this.board.ball.x < 0) {
+                conP1++;
+                document.getElementById("p2").innerHTML = `PUNTAJE ${conP1}`;
+                if (conP1 > 5) {
+                    this.board.game_over = true;
+                }
+            }
+
+            if (this.board.ball.x > 800) {
+                conP2++;
+                document.getElementById("p1").innerHTML = `PUNTAJE ${conP2}`;
+                if (conP2 > 5) {
+                    this.board.game_over = true;
+                }
+            }
+            this.board.ball.speed_x *= -1;
+        }
+        console.log(this.board.ba)
+        //Colicones horizontales
+        if (this.board.ball.y < 0 || this.board.ball.y > 400) {
+            this.board.ball.speed_y *= -1;
+        }
+    };
+
+    play = () => {
+        if (this.board.playing) {
+            this.clean();
+            this.draw();
+            this.check_collisions();
+            this.board.ball.move();
+        }
+    };
+
+    hit(a, b) {
+        let hit = false;
+        //Colisiones horizontales
+        if ((b.x + b.width >= a.x + a.width) && (b.x < a.x + a.width)) {
+            //Colisiones verticales
+            if ((b.y + b.height >= a.y) && (b.y < a.y + a.height))
+                hit = true;
+        }
+
+        //Colisión de a con b
+        if (b.x <= a.x && b.x + b.width >= a.x + a.width) {
+            if (b.y <= a.y && b.y + b.height >= a.y + a.height)
+                hit = true;
+        }
+
+        //Colisión b con a
+        if (a.x <= b.x && a.x - a.width >= b.x + b.width) {
+            if (a.y <= b.y && a.y + a.height >= b.y + b.height)
+                hit = true;
+        }
+
+        return hit;
+    };
+
+    drawf(ctx, element) {
+        switch (element.kind) {
+            case "rectangle":
+                ctx.fillRect(element.x, element.y, element.width, element.height);
+                break;
+            case "circle":
+                ctx.beginPath();
+                ctx.arc(element.x, element.y, element.radius, 0, 7);
+                ctx.fill();
+                ctx.closePath();
+                break;
+        }
+    }
+}
